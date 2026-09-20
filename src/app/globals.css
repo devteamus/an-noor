@@ -1,0 +1,464 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-bengali: "Kalpurush", "Noto Sans Bengali", var(--font-geist-sans), sans-serif;
+  --font-arabic: var(--font-arabic);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+:root {
+  --radius: 0.75rem;
+
+  /* Light theme — warm parchment + emerald + gold (Islamic palette) */
+  --background: oklch(0.99 0.008 110);
+  --foreground: oklch(0.22 0.02 160);
+
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.22 0.02 160);
+
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.22 0.02 160);
+
+  /* Primary: emerald green */
+  --primary: oklch(0.52 0.13 160);
+  --primary-foreground: oklch(0.99 0.005 110);
+
+  --secondary: oklch(0.96 0.02 120);
+  --secondary-foreground: oklch(0.3 0.04 160);
+
+  --muted: oklch(0.96 0.012 110);
+  --muted-foreground: oklch(0.5 0.02 150);
+
+  /* Accent: warm gold */
+  --accent: oklch(0.92 0.05 85);
+  --accent-foreground: oklch(0.32 0.06 80);
+
+  --destructive: oklch(0.58 0.22 27);
+  --border: oklch(0.9 0.015 120);
+  --input: oklch(0.92 0.015 120);
+  --ring: oklch(0.52 0.13 160);
+
+  --chart-1: oklch(0.6 0.13 160);
+  --chart-2: oklch(0.7 0.15 85);
+  --chart-3: oklch(0.62 0.14 230);
+  --chart-4: oklch(0.65 0.2 30);
+  --chart-5: oklch(0.55 0.16 300);
+
+  --sidebar: oklch(0.985 0.008 110);
+  --sidebar-foreground: oklch(0.22 0.02 160);
+  --sidebar-primary: oklch(0.52 0.13 160);
+  --sidebar-primary-foreground: oklch(0.99 0.005 110);
+  --sidebar-accent: oklch(0.96 0.02 120);
+  --sidebar-accent-foreground: oklch(0.3 0.04 160);
+  --sidebar-border: oklch(0.9 0.015 120);
+  --sidebar-ring: oklch(0.52 0.13 160);
+}
+
+.dark {
+  /* Dark theme — deep emerald night */
+  --background: oklch(0.16 0.015 165);
+  --foreground: oklch(0.96 0.012 110);
+
+  --card: oklch(0.21 0.02 165);
+  --card-foreground: oklch(0.96 0.012 110);
+
+  --popover: oklch(0.21 0.02 165);
+  --popover-foreground: oklch(0.96 0.012 110);
+
+  --primary: oklch(0.72 0.15 160);
+  --primary-foreground: oklch(0.18 0.03 165);
+
+  --secondary: oklch(0.27 0.02 165);
+  --secondary-foreground: oklch(0.96 0.012 110);
+
+  --muted: oklch(0.26 0.015 165);
+  --muted-foreground: oklch(0.7 0.015 120);
+
+  --accent: oklch(0.34 0.05 85);
+  --accent-foreground: oklch(0.95 0.03 85);
+
+  --destructive: oklch(0.7 0.19 22);
+  --border: oklch(1 0 0 / 12%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.72 0.15 160);
+
+  --chart-1: oklch(0.72 0.15 160);
+  --chart-2: oklch(0.78 0.16 85);
+  --chart-3: oklch(0.7 0.15 230);
+  --chart-4: oklch(0.72 0.2 30);
+  --chart-5: oklch(0.65 0.18 300);
+
+  --sidebar: oklch(0.19 0.018 165);
+  --sidebar-foreground: oklch(0.96 0.012 110);
+  --sidebar-primary: oklch(0.72 0.15 160);
+  --sidebar-primary-foreground: oklch(0.18 0.03 165);
+  --sidebar-accent: oklch(0.27 0.02 165);
+  --sidebar-accent-foreground: oklch(0.96 0.012 110);
+  --sidebar-border: oklch(1 0 0 / 12%);
+  --sidebar-ring: oklch(0.72 0.15 160);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "ss01";
+  }
+  /* Bengali text uses the Kalpurush font nicely */
+  .font-bengali {
+    font-family: "Kalpurush", "Noto Sans Bengali", var(--font-geist-sans), sans-serif;
+  }
+  .font-arabic {
+    font-family: var(--font-arabic), serif;
+    direction: rtl;
+    line-height: 2.1;
+  }
+}
+
+/* Decorative Islamic pattern background */
+.pattern-bg {
+  background-image:
+    radial-gradient(circle at 20% 20%, oklch(0.52 0.13 160 / 0.06) 0%, transparent 40%),
+    radial-gradient(circle at 80% 0%, oklch(0.7 0.15 85 / 0.07) 0%, transparent 35%),
+    radial-gradient(circle at 50% 100%, oklch(0.52 0.13 160 / 0.05) 0%, transparent 45%);
+}
+
+.dark .pattern-bg {
+  background-image:
+    radial-gradient(circle at 20% 20%, oklch(0.72 0.15 160 / 0.1) 0%, transparent 40%),
+    radial-gradient(circle at 80% 0%, oklch(0.78 0.16 85 / 0.08) 0%, transparent 35%),
+    radial-gradient(circle at 50% 100%, oklch(0.72 0.15 160 / 0.08) 0%, transparent 45%);
+}
+
+/* Custom scrollbar */
+.custom-scroll::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.custom-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scroll::-webkit-scrollbar-thumb {
+  background: oklch(0.7 0.1 160 / 0.4);
+  border-radius: 9999px;
+}
+.custom-scroll::-webkit-scrollbar-thumb:hover {
+  background: oklch(0.6 0.13 160 / 0.6);
+}
+
+/* Counter pulse animation */
+@keyframes count-pulse {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.18); }
+  100% { transform: scale(1); }
+}
+.count-pulse {
+  animation: count-pulse 0.28s ease-out;
+}
+
+/* Gentle floating animation for decorative elements */
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+.float-slow {
+  animation: float-slow 6s ease-in-out infinite;
+}
+
+/* Tap ripple for the big counter button */
+.tap-ripple {
+  position: absolute;
+  border-radius: 9999px;
+  background: oklch(0.99 0 0 / 0.5);
+  transform: scale(0);
+  animation: ripple 0.6s ease-out forwards;
+  pointer-events: none;
+}
+@keyframes ripple {
+  to {
+    transform: scale(2.5);
+    opacity: 0;
+  }
+}
+
+/* Subtle shimmer for progress */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    oklch(0.99 0 0 / 0.25) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2s linear infinite;
+}
+
+/* ===== Blog content (prose) ===== */
+.blog-content {
+  font-family: "Kalpurush", "Noto Sans Bengali", sans-serif;
+  font-size: 1.05rem;
+  line-height: 1.95;
+  color: var(--foreground);
+  word-wrap: break-word;
+}
+.blog-content p { margin: 0 0 1.1em 0; }
+.blog-content h2 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin: 1.5em 0 0.6em;
+  color: var(--foreground);
+}
+.blog-content h3 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin: 1.3em 0 0.5em;
+}
+.blog-content ul, .blog-content ol {
+  margin: 0 0 1.1em 1.4em;
+  padding-left: 0.4em;
+}
+.blog-content ul { list-style: disc; }
+.blog-content ol { list-style: decimal; }
+.blog-content li { margin: 0.3em 0; }
+.blog-content a {
+  color: oklch(0.52 0.13 160);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  font-weight: 500;
+}
+.dark .blog-content a { color: oklch(0.72 0.15 160); }
+.blog-content blockquote {
+  border-left: 3px solid oklch(0.52 0.13 160);
+  margin: 1em 0;
+  padding: 0.4em 1em;
+  background: oklch(0.52 0.13 160 / 0.06);
+  border-radius: 0 0.5rem 0.5rem 0;
+  font-style: italic;
+}
+.blog-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.75rem;
+  margin: 1em 0;
+}
+.blog-content strong { font-weight: 700; }
+.blog-content hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 1.5em 0;
+}
+/* interlink badge */
+.blog-content a[data-interlink="true"] {
+  background: oklch(0.52 0.13 160 / 0.1);
+  padding: 0.05em 0.3em;
+  border-radius: 0.3rem;
+  text-decoration: none;
+  border-bottom: 1.5px dashed oklch(0.52 0.13 160);
+}
+.blog-content a[data-interlink="true"]:hover {
+  background: oklch(0.52 0.13 160 / 0.18);
+}
+/* ===== Qur'an ayat / hadith citation cards ===== */
+.blog-content .citation-card {
+  margin: 1.4em 0;
+  padding: 1.1em 1.3em;
+  border-radius: 0.9rem;
+  position: relative;
+}
+.blog-content .citation-quran {
+  background: oklch(0.52 0.13 160 / 0.07);
+  border: 1px solid oklch(0.52 0.13 160 / 0.25);
+  border-right: 4px solid oklch(0.52 0.13 160);
+}
+.dark .blog-content .citation-quran {
+  background: oklch(0.72 0.15 160 / 0.08);
+  border-color: oklch(0.72 0.15 160 / 0.3);
+  border-right-color: oklch(0.72 0.15 160);
+}
+.blog-content .citation-hadith {
+  background: oklch(0.75 0.15 75 / 0.08);
+  border: 1px solid oklch(0.75 0.15 75 / 0.3);
+  border-right: 4px solid oklch(0.65 0.16 60);
+}
+.dark .blog-content .citation-hadith {
+  background: oklch(0.75 0.15 75 / 0.1);
+  border-color: oklch(0.75 0.15 75 / 0.35);
+}
+.blog-content .citation-text {
+  margin: 0 0 0.5em 0 !important;
+  font-style: italic;
+  font-weight: 600;
+  line-height: 1.9;
+}
+.blog-content .citation-ref {
+  display: inline-block;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: oklch(0.52 0.13 160);
+  opacity: 0.9;
+}
+.blog-content .citation-hadith .citation-ref {
+  color: oklch(0.55 0.16 60);
+}
+.dark .blog-content .citation-hadith .citation-ref {
+  color: oklch(0.8 0.14 75);
+}
+
+/* ===== Dua card (Arabic + uccharon + ortho) ===== */
+.blog-content .dua-card {
+  margin: 1.4em 0;
+  padding: 1.4em 1.4em 1.1em;
+  border-radius: 1rem;
+  background: linear-gradient(180deg, oklch(0.52 0.13 160 / 0.08), oklch(0.52 0.13 160 / 0.02));
+  border: 1px solid oklch(0.52 0.13 160 / 0.2);
+}
+.dark .blog-content .dua-card {
+  background: linear-gradient(180deg, oklch(0.72 0.15 160 / 0.1), oklch(0.72 0.15 160 / 0.02));
+  border-color: oklch(0.72 0.15 160 / 0.25);
+}
+.blog-content .dua-card-arabic {
+  font-size: 1.6rem;
+  line-height: 2.2;
+  text-align: center;
+  color: var(--foreground);
+  margin-bottom: 0.7em;
+}
+.blog-content .dua-card-row {
+  margin-top: 0.6em;
+  padding-top: 0.6em;
+  border-top: 1px dashed oklch(0.52 0.13 160 / 0.25);
+}
+.dark .blog-content .dua-card-row {
+  border-top-color: oklch(0.72 0.15 160 / 0.25);
+}
+.blog-content .dua-card-row p { margin: 0.2em 0 0 !important; }
+.blog-content .dua-card-label {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.1em 0.6em;
+  border-radius: 999px;
+  background: oklch(0.52 0.13 160 / 0.15);
+  color: oklch(0.4 0.13 160);
+}
+.dark .blog-content .dua-card-label {
+  background: oklch(0.72 0.15 160 / 0.18);
+  color: oklch(0.85 0.1 160);
+}
+
+/* ===== TL;DR summary box ===== */
+.blog-content .summary-box {
+  margin: 0 0 1.4em 0;
+  padding: 1em 1.2em;
+  border-radius: 0.9rem;
+  background: oklch(0.6 0.13 240 / 0.08);
+  border: 1px solid oklch(0.6 0.13 240 / 0.25);
+}
+.dark .blog-content .summary-box {
+  background: oklch(0.65 0.15 240 / 0.1);
+  border-color: oklch(0.65 0.15 240 / 0.3);
+}
+.blog-content .summary-box p { margin: 0.3em 0 0 !important; }
+.blog-content .summary-box-label {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 0.15em 0.7em;
+  border-radius: 999px;
+  background: oklch(0.6 0.13 240 / 0.18);
+  color: oklch(0.42 0.15 240);
+}
+.dark .blog-content .summary-box-label {
+  background: oklch(0.65 0.15 240 / 0.22);
+  color: oklch(0.85 0.1 240);
+}
+
+/* ===== FAQ accordion (native <details>/<summary>, no JS needed) ===== */
+.blog-content .faq-list {
+  margin: 1em 0 1.6em;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6em;
+}
+.blog-content .faq-item {
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  padding: 0.9em 1.1em;
+  background: var(--card);
+}
+.blog-content .faq-item summary {
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 1rem;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8em;
+}
+.blog-content .faq-item summary::-webkit-details-marker { display: none; }
+.blog-content .faq-item summary::after {
+  content: "+";
+  font-size: 1.3rem;
+  font-weight: 400;
+  color: oklch(0.52 0.13 160);
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+.blog-content .faq-item[open] summary::after {
+  content: "−";
+}
+.blog-content .faq-answer {
+  margin-top: 0.7em;
+  padding-top: 0.7em;
+  border-top: 1px solid var(--border);
+  color: var(--muted-foreground);
+}
+.blog-content .faq-answer p { margin: 0 0 0.6em 0 !important; }
+.blog-content .faq-answer p:last-child { margin-bottom: 0 !important; }

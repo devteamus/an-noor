@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#10b981"/>
+      <stop offset="1" stop-color="#0d9488"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fbbf24"/>
+      <stop offset="1" stop-color="#d97706"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#g)"/>
+  <!-- Mosque dome + crescent -->
+  <path d="M256 96c-70 0-128 52-128 116v148h256V212c0-64-58-116-128-116z" fill="#ffffff" opacity="0.95"/>
+  <path d="M256 132c-52 0-96 38-96 84v132h192V216c0-46-44-84-96-84z" fill="url(#g)"/>
+  <!-- arch -->
+  <path d="M256 176c-34 0-62 26-62 58v114h124V234c0-32-28-58-62-58z" fill="#ffffff" opacity="0.92"/>
+  <!-- Prayer beads / counter dot -->
+  <circle cx="256" cy="300" r="26" fill="url(#gold)"/>
+  <circle cx="256" cy="300" r="12" fill="#fff" opacity="0.85"/>
+  <!-- Crescent on top -->
+  <path d="M256 64a30 30 0 1 0 0 60 38 38 0 1 1 0-60z" fill="url(#gold)"/>
+  <circle cx="270" cy="94" r="6" fill="#fbbf24"/>
+</svg>

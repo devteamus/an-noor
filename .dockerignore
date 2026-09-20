@@ -1,0 +1,23 @@
+# Docker build context-এ যা ঢুকবে না (বিল্ড দ্রুত + নিরাপদ)
+node_modules
+.next
+.git
+db
+build-zip
+stage-docker
+pgtest
+upload
+download
+tests
+examples
+agent-ctx
+skills
+docs-build
+*.log
+*.tsbuildinfo
+.env
+.env.local
+.env.*.local
+Dockerfile*
+docker-compose*
+README.md

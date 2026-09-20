@@ -1,0 +1,17 @@
+{
+  "name": "ঈমান ও আমল — দুআ কাউন্টার",
+  "short_name": "ঈমান ও আমল",
+  "description": "লাইভ দুআ কাউন্টার — আরবি, অর্থ ও ফজিলত সহ",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#10b981",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+# আন-নূর — অ্যাপ + PostgreSQL একসাথে (একটাই Docker Compose স্ট্যাক)
+#
+# Coolify-তে: এই ফাইলটা দিয়ে একটাই রিসোর্স তৈরি হবে — আলাদা ডেটাবেস
+# বানানো/কানেক্ট করা লাগবে না। সাধারণ VPS-এ: docker compose up -d --build
+#
+# চালুর আগে .env ফাইল বানান (.env.example দেখুন) — অন্তত POSTGRES_PASSWORD,
+# ADMIN_EMAIL, ADMIN_PASSWORD, AUTH_SECRET অবশ্যই সেট করুন।
+
+services:
+  # ---- PostgreSQL (শুধু অভ্যন্তরীণ নেটওয়ার্ক — বাইরে থেকে পাওয়া যায় না) ----
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-annoor}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-}
+      POSTGRES_DB: ${POSTGRES_DB:-annoora}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER:-annoor} -d $${POSTGRES_DB:-annoora}"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 10s
+    # ইচ্ছা করলে বাদ দিয়ে দিন না — ports সেকশন নেই মানেই ইন্টারনেট থেকে
+    # ডেটাবেসে ঢোকা অসম্ভব, শুধু app কনটেইনার থেকেই যোগ করা যায়।
+
+  # ---- আন-নূর Next.js অ্যাপ ----
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      # compose নিজেই ডেটাবেস URL বানিয়ে দেয় — এটা বদলাতে হবে না
+      DATABASE_URL: postgresql://${POSTGRES_USER:-annoor}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-annoora}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-}
+      # অ্যাডমিন সেশন সাইনিং সিক্রেট (বানানোর কমান্ড .env.example-এ আছে)
+      AUTH_SECRET: ${AUTH_SECRET:-}
+      # প্রথম বুটে admin অ্যাকাউন্ট এই তথ্যে তৈরি হবে
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-}
+      # সাইটের পাবলিক URL — canonical/OG/sitemap-এ ব্যবহৃত হয়
+      NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-https://annoor.xyz}
+    ports:
+      - "${APP_PORT:-3000}:3000"
+
+volumes:
+  pgdata:
+    # এখানেই সব ব্লগ/বই/ভিউ-কাউন্ট ডেটা থাকবে — রিডিপ্লয়ে হারাবে না
