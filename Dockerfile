@@ -44,12 +44,12 @@ COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
 COPY --from=builder /app/public ./public
 
-# Prisma runtime + CLI — কনটেইনার চালু হওয়ার সময় db push + seed চালানোর জন্য
-# (standalone node_modules-এর উপরে overlay — ভার্সন এক, কনফ্লিক্ট নেই)
-COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
-COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
-COPY --from=builder /app/node_modules/prisma ./node_modules/prisma
-COPY --from=builder /app/node_modules/.bin ./node_modules/.bin
+# Prisma CLI + client — কনটেইনার চালু হওয়ার সময় db push + seed চালানোর জন্য।
+# শুধু .prisma/@prisma/prisma ফোল্ডার কপি করলে prisma CLI-র transitive
+# dependency (যেমন "effect", @prisma/config যা ব্যবহার করে) miss হয়ে যায়
+# ("Cannot find module 'effect'" এরর) — তাই পুরো node_modules কপি করা হচ্ছে,
+# যাতে ভবিষ্যতে prisma-র কোনো hidden dependency miss না হয়
+COPY --from=builder /app/node_modules ./node_modules
 
 # স্কিমা + seed ডেটা + entrypoint
 COPY --from=builder /app/prisma ./prisma
