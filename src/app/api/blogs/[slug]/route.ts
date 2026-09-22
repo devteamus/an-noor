@@ -17,7 +17,8 @@ import {
 } from "@/lib/blog-utils";
 import { formatBlogContent } from "@/lib/blog-content-formatter";
 
-/* GET /api/blogs/[slug] — single post, increments views, returns interlinked content + related */
+/* GET /api/blogs/[slug] — single post, increments views, returns interlinked content + related
+   GET /api/blogs/[slug]?edit=1 — admin-only raw fetch (no interlink/format/view-count), for edit form */
 export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ slug: string }> }
@@ -31,6 +32,26 @@ export async function GET(
 
   if (!blog) {
     return NextResponse.json({ error: "ব্লগ পাওয়া যায়নি।" }, { status: 404 });
+  }
+
+  // ---- raw admin edit mode: original fields only, no side-effects ----
+  if (req.nextUrl.searchParams.get("edit") === "1") {
+    const session = await getSession();
+    if (!session) {
+      return NextResponse.json({ error: "অনুমতি নেই।" }, { status: 401 });
+    }
+    return NextResponse.json({
+      blog: {
+        id: blog.id,
+        title: blog.title,
+        slug: blog.slug,
+        content: blog.content,
+        featureImage: blog.featureImage,
+        published: blog.published,
+        scheduledAt: blog.scheduledAt,
+        category: blog.category ? { name: blog.category.name } : null,
+      },
+    });
   }
 
   // visibility: live blogs are public; scheduled/draft only to admin
