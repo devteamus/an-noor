@@ -7,10 +7,10 @@ const isDev = process.env.NODE_ENV !== "production";
 
 const ContentSecurityPolicy = `
   default-src 'self';
-  script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""} https://www.youtube-nocookie.com https://www.youtube.com;
-  style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.maateen.com;
+  script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""} https://www.youtube-nocookie.com https://www.youtube.com https://www.googletagmanager.com https://static.cloudflareinsights.com;
+  style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
   img-src 'self' data: https: blob:;
-  font-src 'self' https://fonts.gstatic.com https://fonts.maateen.com data:;
+  font-src 'self' https://fonts.gstatic.com data:;
   media-src 'self' https://quranaudio.myislam.org https://www.hadithbd.com https://pub-e0f4ae7db85a4d0db7d0f6d92401108b.r2.dev https://*.r2.dev blob:;
   frame-src 'self' https://www.youtube-nocookie.com https://www.youtube.com;
   child-src 'self' https://www.youtube-nocookie.com https://www.youtube.com;
