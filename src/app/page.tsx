@@ -15,9 +15,20 @@ import { NamazView } from "@/components/app/namaz-view";
 import { BlogView } from "@/components/app/blog-view";
 import { BlogPostView } from "@/components/app/blog-post-view";
 import { ShopView } from "@/components/app/shop-view";
-import { AdminLoginView } from "@/components/app/admin-login-view";
-import { AdminDashboardView } from "@/components/app/admin-dashboard-view";
+import dynamic from "next/dynamic";
 import { AnimatePresence, motion } from "framer-motion";
+
+// অ্যাডমিন ভিউ শুধু admin login/dashboard দেখলেই লাগে — সাধারণ ভিজিটরদের
+// initial JS bundle-এ এটা (recharts, admin-শপ, অ্যাফিলিয়েট ম্যানেজার ইত্যাদি
+// ভারী dependency) টেনে আনা অপ্রয়োজনীয়, তাই dynamic import দিয়ে আলাদা চাঙ্কে রাখা হচ্ছে
+const AdminLoginView = dynamic(
+  () => import("@/components/app/admin-login-view").then((m) => m.AdminLoginView),
+  { ssr: false }
+);
+const AdminDashboardView = dynamic(
+  () => import("@/components/app/admin-dashboard-view").then((m) => m.AdminDashboardView),
+  { ssr: false }
+);
 
 export default function Home() {
   const view = useAppStore((s) => s.view);
