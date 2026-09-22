@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono, Amiri } from "next/font/google";
+import { Geist, Geist_Mono, Amiri, Noto_Sans_Bengali } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from "@/components/theme-provider";
@@ -7,8 +8,12 @@ import { ThemeProvider } from "@/components/theme-provider";
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
 const amiri = Amiri({ variable: "--font-arabic", subsets: ["arabic", "latin"], weight: ["400", "700"], display: "swap" });
+// Kalpurush-এর host (fonts.maateen.com) ডাউন — সেই external <link> এর বদলে
+// Noto Sans Bengali next/font দিয়ে self-host করা হচ্ছে (render-blocking নয়, দ্রুত)
+const notoBengali = Noto_Sans_Bengali({ variable: "--font-noto-bengali", subsets: ["bengali", "latin"], weight: ["400", "500", "600", "700"], display: "swap" });
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://annoor.xyz";
+const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
@@ -45,10 +50,19 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="bn" suppressHydrationWarning>
       <head>
-        <link rel="stylesheet" href="https://fonts.maateen.com/kalpurush.css" />
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap" />
+        {GA_ID && (
+          <>
+            <Script src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} strategy="afterInteractive" />
+            <Script id="ga-init" strategy="afterInteractive">
+              {`window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '${GA_ID}');`}
+            </Script>
+          </>
+        )}
       </head>
-      <body className={`${geistSans.variable} ${geistMono.variable} ${amiri.variable} font-bengali antialiased bg-background text-foreground`}>
+      <body className={`${geistSans.variable} ${geistMono.variable} ${amiri.variable} ${notoBengali.variable} font-bengali antialiased bg-background text-foreground`}>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
           {children}
           <Toaster />
