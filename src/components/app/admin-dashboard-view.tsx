@@ -19,6 +19,8 @@ import {
   FileDown,
   List,
   Trash2,
+  Pencil,
+  X,
   Eye,
   Plus,
   Upload,
@@ -51,6 +53,8 @@ export function AdminDashboardView() {
   const [authed, setAuthed] = React.useState(false);
   const [admin, setAdmin] = React.useState<{ name: string; email: string } | null>(null);
   const [categories, setCategories] = React.useState<CategoryInfo[]>([]);
+  const [editingSlug, setEditingSlug] = React.useState<string | null>(null);
+  const [activeTab, setActiveTab] = React.useState("overview");
 
   const checkSession = React.useCallback(async () => {
     try {
@@ -119,7 +123,7 @@ export function AdminDashboardView() {
         </Button>
       </div>
 
-      <Tabs defaultValue="overview" className="space-y-4">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
         <TabsList className="grid w-full grid-cols-3 sm:grid-cols-6">
           <TabsTrigger value="overview" className="gap-1.5 font-bengali">
             <BarChart3 className="h-4 w-4" />
@@ -160,7 +164,12 @@ export function AdminDashboardView() {
         <TabsContent value="single">
           <SinglePublishForm
             categories={categories}
+            editingSlug={editingSlug}
             onPublished={() => {}}
+            onDoneEditing={() => {
+              setEditingSlug(null);
+              setActiveTab("list");
+            }}
           />
         </TabsContent>
 
@@ -169,7 +178,13 @@ export function AdminDashboardView() {
         </TabsContent>
 
         <TabsContent value="list">
-          <BlogListManager onOpen={goBlogPost} />
+          <BlogListManager
+            onOpen={goBlogPost}
+            onEdit={(slug) => {
+              setEditingSlug(slug);
+              setActiveTab("single");
+            }}
+          />
         </TabsContent>
 
         <TabsContent value="shop">
@@ -187,10 +202,14 @@ export function AdminDashboardView() {
 /* ============ Single publish form ============ */
 function SinglePublishForm({
   categories,
+  editingSlug,
   onPublished,
+  onDoneEditing,
 }: {
   categories: CategoryInfo[];
+  editingSlug: string | null;
   onPublished: () => void;
+  onDoneEditing: () => void;
 }) {
   const { toast } = useToast();
   const [title, setTitle] = React.useState("");
@@ -201,6 +220,58 @@ function SinglePublishForm({
   const [enableSchedule, setEnableSchedule] = React.useState(false);
   const [scheduledAt, setScheduledAt] = React.useState("");
   const [loading, setLoading] = React.useState(false);
+  const [loadingEdit, setLoadingEdit] = React.useState(false);
+
+  const isEditing = !!editingSlug;
+
+  const resetForm = () => {
+    setTitle("");
+    setContent("");
+    setFeatureImage("");
+    setCategory("");
+    setPublished(true);
+    setEnableSchedule(false);
+    setScheduledAt("");
+  };
+
+  // এডিট মোডে ঢুকলে বিদ্যমান পোস্টের raw ডেটা এনে ফর্ম fill করুন
+  React.useEffect(() => {
+    if (!editingSlug) {
+      resetForm();
+      return;
+    }
+    setLoadingEdit(true);
+    fetch(`/api/blogs/${encodeURIComponent(editingSlug)}?edit=1`)
+      .then((r) => r.json())
+      .then((d) => {
+        if (!d.blog) return;
+        setTitle(d.blog.title || "");
+        setContent(d.blog.content || "");
+        setFeatureImage(d.blog.featureImage || "");
+        setCategory(d.blog.category?.name || "");
+        setPublished(d.blog.published !== false);
+        if (d.blog.scheduledAt) {
+          setEnableSchedule(true);
+          // datetime-local input চায় "YYYY-MM-DDTHH:mm" ফরম্যাটে (লোকাল টাইমে)
+          const dt = new Date(d.blog.scheduledAt);
+          const pad = (n: number) => String(n).padStart(2, "0");
+          setScheduledAt(
+            `${dt.getFullYear()}-${pad(dt.getMonth() + 1)}-${pad(dt.getDate())}T${pad(dt.getHours())}:${pad(dt.getMinutes())}`
+          );
+        } else {
+          setEnableSchedule(false);
+          setScheduledAt("");
+        }
+      })
+      .catch(() => {
+        toast({
+          title: "ব্যর্থ",
+          description: "পোস্টের তথ্য আনতে সমস্যা হয়েছে।",
+          variant: "destructive",
+        });
+      })
+      .finally(() => setLoadingEdit(false));
+  }, [editingSlug, toast]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -223,26 +294,29 @@ function SinglePublishForm({
       };
       if (enableSchedule && scheduledAt) {
         payload.scheduledAt = new Date(scheduledAt).toISOString();
+      } else if (isEditing) {
+        payload.scheduledAt = null;
       }
-      const res = await fetch("/api/blogs", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
+      const res = await fetch(
+        isEditing ? `/api/blogs/${encodeURIComponent(editingSlug!)}` : "/api/blogs",
+        {
+          method: isEditing ? "PUT" : "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        }
+      );
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
       toast({
         title: "সফল!",
-        description: enableSchedule
+        description: isEditing
+          ? "ব্লগ আপডেট হয়েছে।"
+          : enableSchedule
           ? "ব্লগ সিডিউল করা হয়েছে। নির্ধারিত সময়ে প্রকাশিত হবে।"
           : "ব্লগ পাবলিশ হয়েছে। meta স্বয়ংক্রিয়ভাবে তৈরি হয়েছে।",
       });
-      setTitle("");
-      setContent("");
-      setFeatureImage("");
-      setCategory("");
-      setEnableSchedule(false);
-      setScheduledAt("");
+      resetForm();
+      if (isEditing) onDoneEditing();
       onPublished();
     } catch (err) {
       toast({
@@ -257,6 +331,29 @@ function SinglePublishForm({
 
   return (
     <Card className="p-5 sm:p-6">
+      {isEditing && (
+        <div className="mb-4 flex items-center justify-between rounded-lg border border-amber-500/30 bg-amber-500/10 px-3.5 py-2.5">
+          <p className="flex items-center gap-1.5 font-bengali text-xs font-medium text-amber-700 dark:text-amber-300">
+            <Pencil className="h-3.5 w-3.5" />
+            পোস্ট এডিট করা হচ্ছে
+          </p>
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            className="h-7 gap-1 font-bengali cursor-pointer"
+            onClick={onDoneEditing}
+          >
+            <X className="h-3.5 w-3.5" />
+            বাতিল
+          </Button>
+        </div>
+      )}
+      {loadingEdit ? (
+        <div className="grid place-items-center py-16">
+          <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+        </div>
+      ) : (
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-1.5">
           <Label htmlFor="title" className="font-bengali">
@@ -379,12 +476,21 @@ function SinglePublishForm({
         >
           {loading ? (
             <Loader2 className="h-4 w-4 animate-spin" />
+          ) : isEditing ? (
+            <Pencil className="h-4 w-4" />
           ) : (
             <Plus className="h-4 w-4" />
           )}
-          {loading ? "পাবলিশ হচ্ছে..." : "ব্লগ পাবলিশ করুন"}
+          {loading
+            ? isEditing
+              ? "আপডেট হচ্ছে..."
+              : "পাবলিশ হচ্ছে..."
+            : isEditing
+            ? "ব্লগ আপডেট করুন"
+            : "ব্লগ পাবলিশ করুন"}
         </Button>
       </form>
+      )}
     </Card>
   );
 }
@@ -595,7 +701,13 @@ function CsvBulkUpload() {
 }
 
 /* ============ Blog list manager ============ */
-function BlogListManager({ onOpen }: { onOpen: (slug: string) => void }) {
+function BlogListManager({
+  onOpen,
+  onEdit,
+}: {
+  onOpen: (slug: string) => void;
+  onEdit: (slug: string) => void;
+}) {
   const { toast } = useToast();
   const [blogs, setBlogs] = React.useState<BlogListItem[]>([]);
   const [page, setPage] = React.useState(1);
@@ -722,6 +834,15 @@ function BlogListManager({ onOpen }: { onOpen: (slug: string) => void }) {
                   aria-label="দেখুন"
                 >
                   <ExternalLink className="h-4 w-4" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8 cursor-pointer"
+                  onClick={() => onEdit(b.slug)}
+                  aria-label="এডিট"
+                >
+                  <Pencil className="h-4 w-4" />
                 </Button>
                 <Button
                   variant="ghost"
