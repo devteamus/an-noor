@@ -41,7 +41,7 @@ export function AppFooter() {
                   href="https://www.facebook.com/iFaisalusa"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="font-semibold text-emerald-700 underline-offset-2 hover:underline dark:text-emerald-400"
+                  className="inline-block py-1 font-semibold text-emerald-700 underline-offset-2 hover:underline dark:text-emerald-400"
                 >
                   Faisal Hossain
                 </a>
@@ -113,7 +113,7 @@ export function AppFooter() {
           <div className="flex flex-col gap-1 text-[11px] sm:flex-row sm:items-center sm:gap-3">
             <a
               href="mailto:ifaisal.eth@gmail.com"
-              className="font-bengali text-muted-foreground underline-offset-4 transition-colors hover:text-foreground hover:underline"
+              className="inline-block py-2 font-bengali text-muted-foreground underline-offset-4 transition-colors hover:text-foreground hover:underline"
             >
               ifaisal.eth@gmail.com
             </a>
@@ -122,7 +122,7 @@ export function AppFooter() {
               href="https://www.facebook.com/iFaisalusa"
               target="_blank"
               rel="noopener noreferrer"
-              className="font-bengali text-muted-foreground underline-offset-4 transition-colors hover:text-foreground hover:underline"
+              className="inline-block py-2 font-bengali text-muted-foreground underline-offset-4 transition-colors hover:text-foreground hover:underline"
             >
               facebook.com/iFaisalusa
             </a>
